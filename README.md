@@ -49,14 +49,14 @@ git commit -m "Initial release: Web version of Historia Cubos"
 git branch -M main
 
 # 5. Conectar con tu repositorio en GitHub
-git remote add origin https://github.com/GrAlmazan/historia-cubos.git
+git remote add origin https://github.com/GrAlmazan/Historia-Cubos.git
 
 # 6. Subir los archivos por primera vez
 git push -u origin main
 ```
 
 ### 2. Activar GitHub Pages con 1 Clic
-1. Entra a tu repositorio en GitHub: [https://github.com/GrAlmazan/historia-cubos](https://github.com/GrAlmazan/historia-cubos)
+1. Entra a tu repositorio en GitHub: [https://github.com/GrAlmazan/Historia-Cubos](https://github.com/GrAlmazan/Historia-Cubos)
 2. Haz clic en la pestaña **Settings** (Configuración) en la parte superior.
 3. En el menú lateral izquierdo, haz clic en **Pages**.
 4. En la sección **Build and deployment** > **Branch**:
@@ -64,7 +64,7 @@ git push -u origin main
    - Selecciona la carpeta: **`/ (root)`**.
 5. Haz clic en **Save** (Guardar).
 6. En unos segundos, GitHub activará tu enlace público:
-   `https://gralmazan.github.io/historia-cubos/`
+   `https://gralmazan.github.io/Historia-Cubos/`
 
 ---
 
