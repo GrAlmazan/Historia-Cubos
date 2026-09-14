@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Gregorio Almazán
+Copyright (c) 2026 GrAlmazan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+--------------------------------------------------------------------------------
+DISCLAIMER / AVISO LEGAL Y DESLINDE DE RESPONSABILIDAD
+--------------------------------------------------------------------------------
+"Historia Cubos" es un software libre y de código abierto desarrollado de forma
+independiente como una herramienta digital lúdica y pedagógica para la estimulación
+creativa, la improvisación verbal y la creación de historias.
+
+1. Independencia y Autoría:
+   El código fuente, la interfaz de usuario, la arquitectura web, las representaciones
+   visuales en 3D, la selección y disposición de iconos/emojis y los textos de este
+   repositorio constituyen una obra de autoría propia e independiente.
+
+2. No Afiliación Comercial ni Patrocinio:
+   Este proyecto NO está afiliado, asociado, patrocinado, respaldado ni aprobado por
+   Rory's Story Cubes, The Creativity Hub Ltd., Asmodee Group, ni por ninguna de sus
+   marcas comerciales, matrices o subsidiarias.
+
+3. Derechos de Marcas Comerciales:
+   Cualquier referencia genérica o temática al concepto universal de "dados de historias"
+   o "story cubes" se realiza exclusivamente con fines descriptivos y de compatibilidad
+   conceptual. Todos los nombres comerciales, marcas registradas y derechos de autor
+   mencionados corresponden a sus respectivos propietarios legales.

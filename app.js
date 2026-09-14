@@ -61,7 +61,7 @@ function init() {
     reconstruirDadosEnMesa();
     setupEventListeners();
     setupModals();
-    actualizarPromptAleatorio();
+    actualizarPromptAleatorio(false);
 }
 
 /**
@@ -96,12 +96,24 @@ function renderEditionsControls() {
     });
 }
 
+let globalDieCounter = 1;
+
+/**
+ * Baraja los elementos de un array in-place utilizando el algoritmo Fisher-Yates
+ */
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 /**
  * Reconstruye la mesa de dados respetando los dados bloqueados si es posible
  */
 function reconstruirDadosEnMesa() {
     const nuevosDados = [];
-    let idCounter = 1;
 
     Object.entries(state.cantidades).forEach(([edicion, cantidad]) => {
         if (cantidad <= 0) return;
@@ -123,7 +135,7 @@ function reconstruirDadosEnMesa() {
                 const caraInicial = dadoFisico[Math.floor(Math.random() * dadoFisico.length)];
                 
                 nuevosDados.push({
-                    id: `die-${idCounter++}`,
+                    id: `die-${globalDieCounter++}`,
                     edicion,
                     dadoFisico,
                     caraActual: caraInicial,
@@ -353,11 +365,36 @@ async function copiarResultado() {
 
     textoResultado += `\n¡Crea tu historia con estos elementos! 📖✨`;
 
-    try {
-        await navigator.clipboard.writeText(textoResultado);
+    let copiado = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+            await navigator.clipboard.writeText(textoResultado);
+            copiado = true;
+        } catch (err) {
+            console.warn("Clipboard API no disponible o denegada, usando respaldo execCommand:", err);
+        }
+    }
+
+    if (!copiado) {
+        try {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textoResultado;
+            tempTextArea.style.position = 'fixed';
+            tempTextArea.style.left = '-9999px';
+            tempTextArea.style.top = '-9999px';
+            document.body.appendChild(tempTextArea);
+            tempTextArea.focus();
+            tempTextArea.select();
+            copiado = document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+        } catch (err) {
+            console.error("Error al copiar mediante respaldo:", err);
+        }
+    }
+
+    if (copiado) {
         showToast("¡Tirada copiada al portapapeles con éxito!");
-    } catch (err) {
-        console.error("Error al copiar:", err);
+    } else {
         showToast("No se pudo copiar automáticamente.");
     }
 }
@@ -402,8 +439,8 @@ function aplicarPreset(presetName) {
 /**
  * Muestra un nuevo prompt inspirador aleatorio
  */
-function actualizarPromptAleatorio() {
-    soundManager.playClick();
+function actualizarPromptAleatorio(playSound = true) {
+    if (playSound) soundManager.playClick();
     let nuevoIndex;
     do {
         nuevoIndex = Math.floor(Math.random() * PROMPTS_HISTORIA.length);
@@ -430,6 +467,7 @@ function showToast(mensaje) {
 function setupEventListeners() {
     // Incremento y decremento en selectores de edición
     editionsContainer.addEventListener('click', (e) => {
+        if (state.animando) return;
         const btn = e.target.closest('.counter-btn');
         if (!btn) return;
 
@@ -450,6 +488,7 @@ function setupEventListeners() {
     // Chips de Presets
     document.querySelectorAll('.preset-chip').forEach(chip => {
         chip.addEventListener('click', () => {
+            if (state.animando) return;
             aplicarPreset(chip.dataset.preset);
         });
     });
@@ -531,5 +570,9 @@ function setupModals() {
     });
 }
 
-// Inicialización al cargar la página
-window.addEventListener('DOMContentLoaded', init);
+// Inicialización segura al cargar la página
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
