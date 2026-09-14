@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Cubos - Generador Interactivo de Historias y Dados Creativos</title>
+    <meta name="description" content="Juego interactivo de dados para contar historias y desatar la creatividad. Combina dados de 6 ediciones temáticas con efectos 3D y sonido inmersivo.">
+    <meta name="keywords" content="historia cubos, story cubes, dados de historias, narración creativa, rol, creatividad, juego web">
+    <meta name="author" content="GrAlmazan">
+    <meta name="theme-color" content="#0c111d">
+
+    <!-- Favicon SVG en línea -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
+
+    <!-- OpenGraph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Historia Cubos - Generador Interactivo de Historias">
+    <meta property="og:description" content="Lanza dados 3D temáticos, desbloquea ideas y crea relatos únicos.">
+
+    <!-- Tipografía Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Hoja de Estilos -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navegación Superior -->
+    <header class="navbar">
+        <a href="#" class="brand" title="Historia Cubos - Inicio">
+            <span class="brand-icon">🎲</span>
+            <span class="brand-title">Historia Cubos</span>
+        </a>
+
+        <nav class="nav-actions">
+            <button id="btn-sound-toggle" class="nav-btn" aria-label="Activar o desactivar sonido" title="Sonido activado">
+                <span id="sound-icon">🔊</span>
+                <span class="nav-btn-text">Sonido</span>
+            </button>
+            <button id="btn-rules" class="nav-btn" aria-label="Ver reglas y modos de juego">
+                <span>📖</span>
+                <span class="nav-btn-text">Reglas</span>
+            </button>
+            <button id="btn-about" class="nav-btn" aria-label="Información y licencia">
+                <span>ℹ️</span>
+                <span class="nav-btn-text">Acerca de</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+
+        <!-- Panel de Configuración y Ediciones -->
+        <section class="setup-panel" aria-label="Configuración de la mesa de dados">
+            <div class="setup-header">
+                <div class="setup-title-group">
+                    <h2>Ediciones y Dados</h2>
+                    <p>Elige cuántos dados deseas incluir de cada edición tem&aacute;tica.</p>
+                </div>
+
+                <!-- Presets Rápidos -->
+                <div class="presets-group" aria-label="Combinaciones rápidas">
+                    <button class="preset-chip" data-preset="clasico">Clásico (9 Original)</button>
+                    <button class="preset-chip" data-preset="rapido">Rápido (3)</button>
+                    <button class="preset-chip" data-preset="aventura">Aventura Mix (9)</button>
+                    <button class="preset-chip" data-preset="fantasia">Fantasía Total (9)</button>
+                    <button class="preset-chip" data-preset="misterio">Misterio Total (9)</button>
+                    <button class="preset-chip" data-preset="heroes">Héroes Total (9)</button>
+                    <button class="preset-chip" data-preset="variado">Todo Mezclado (12)</button>
+                    <button class="preset-chip" data-preset="limpiar">Limpiar</button>
+                </div>
+            </div>
+
+            <!-- Grilla Dinámica de Ediciones -->
+            <div id="editions-container" class="editions-grid">
+                <!-- Se inyecta dinámicamente mediante JS con data.js -->
+            </div>
+        </section>
+
+        <!-- Disparador Narrativo (Prompt) -->
+        <section class="story-prompt-card" aria-label="Disparador narrativo">
+            <div class="prompt-content">
+                <span class="prompt-icon">✨</span>
+                <div class="prompt-text" id="prompt-display">
+                    "Érase una vez, en un rincón olvidado donde el tiempo parecía haberse detenido..."
+                </div>
+            </div>
+            <button id="btn-refresh-prompt" class="btn-prompt-refresh" title="Generar otro inicio de historia" aria-label="Nuevo inicio">
+                🔄
+            </button>
+        </section>
+
+        <!-- Barra de Acciones Principales -->
+        <section class="action-bar" aria-label="Acciones de juego">
+            <div class="dice-counter-summary">
+                Dados en mesa: <strong id="total-dice-count">9</strong>
+                <span id="locked-dice-count" style="margin-left: 8px; color: #38bdf8; display: none;">(0 bloqueados)</span>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btn-roll" class="btn btn-primary" title="Lanzar dados (o presiona Espacio)">
+                    <span>🎲</span>
+                    <span id="btn-roll-text">Lanzar Dados (Espacio)</span>
+                </button>
+                <button id="btn-copy" class="btn btn-secondary" title="Copiar resultado al portapapeles">
+                    <span>📋</span>
+                    <span>Copiar Tirada</span>
+                </button>
+                <button id="btn-unlock-all" class="btn btn-secondary" title="Desbloquear todos los dados" style="display: none;">
+                    <span>🔓</span>
+                    <span>Desbloquear Todos</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Mesa de Juego (Board) -->
+        <section id="game-board" class="board-container" aria-label="Mesa de lanzamiento">
+            <div id="dice-container" class="dice-grid">
+                <!-- Los dados 3D se generan aquí dinámicamente -->
+            </div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-icon">🎲</div>
+                <h3>No hay dados en la mesa</h3>
+                <p>Aumenta la cantidad en el selector superior o selecciona uno de los botones rápidos de combinación.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Reglas de Juego -->
+    <div id="modal-rules" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="rules-title">Cómo Jugar a Historia Cubos</h3>
+                <button class="modal-close-btn" data-close-modal="modal-rules" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>🎯 El Objetivo</h4>
+                <p>
+                    Historia Cubos es un generador de inspiración y creatividad verbal. No hay respuestas incorrectas ni tiradas perdidas: cada icono es una semilla para construir historias emocionantes, divertidas o enigmáticas.
+                </p>
+
+                <h4>🎲 Modos Populares</h4>
+                <ul>
+                    <li><strong>Clásico (9 dados):</strong> Lanza los 9 dados y empieza con <em>"Érase una vez..."</em>. Conecta los 9 símbolos en una historia con inicio, nudo y desenlace.</li>
+                    <li><strong>Ronda Cooperativa:</strong> En grupo, cada persona toma un dado de la mesa y añade un fragmento a la historia que continúa la frase del jugador anterior.</li>
+                    <li><strong>Investigador de Misterios:</strong> Utiliza la edición de Misterio combinada con Acciones para crear un caso policial, pista por pista.</li>
+                    <li><strong>Fijar y Relanzar:</strong> Haz clic sobre cualquier dado para <strong>bloquearlo (fijarlo)</strong> y relanzar el resto para buscar giros inesperados en la trama.</li>
+                </ul>
+
+                <h4>💡 Consejos para Narrar</h4>
+                <ul>
+                    <li>Interpreta los símbolos de forma libre: una manzana puede ser un refrigerio, un veneno o la fruta prohibida.</li>
+                    <li>No te preocupes por el orden: tus ojos pueden saltar entre los dados conforme fluya tu imaginación.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Acerca de y Licencia -->
+    <div id="modal-about" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="about-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="about-title">Acerca de Historia Cubos</h3>
+                <button class="modal-close-btn" data-close-modal="modal-about" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>📜 Licencia de Código Abierto (MIT)</h4>
+                <p>
+                    Este software es un proyecto de código abierto desarrollado bajo los términos de la <strong>Licencia MIT</strong>. Puedes usarlo, estudiarlo, modificarlo y compartirlo libremente.
+                </p>
+
+                <h4>⚖️ Deslinde de Responsabilidad Legal (Disclaimer)</h4>
+                <p>
+                    <strong>Historia Cubos</strong> es una herramienta independiente de estimulación creativa y generación de historias procedurales. Aunque está conceptualmente inspirada en la mecánica universal de dados narrativos (storytelling dice), es una implementación de código, interfaz, gráficos y textos 100% original.
+                </p>
+                <p>
+                    Este proyecto <strong>no está afiliado, patrocinado, respaldado ni asociado de ninguna forma</strong> con <em>Rory's Story Cubes</em>, The Creativity Hub Ltd., Asmodee Group ni con ninguna de sus marcas comerciales registradas. Todas las marcas registradas pertenecen a sus respectivos titulares.
+                </p>
+
+                <h4>💻 Características Técnicas</h4>
+                <ul>
+                    <li>Desarrollado con HTML5 semántico, CSS3 moderno y Vanilla JavaScript.</li>
+                    <li>Efectos de audio sintetizados en tiempo real mediante Web Audio API (cero dependencias externas).</li>
+                    <li>Renderizado de cubos 3D isométricos optimizado para navegadores móviles y de escritorio.</li>
+                    <li>Preparado para alojamiento estático directo en GitHub Pages sin configuración.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de Notificación -->
+    <div id="toast" class="toast-notice" role="alert" aria-live="polite">
+        <span id="toast-icon">✅</span>
+        <span id="toast-msg">Mensaje</span>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <button data-open-modal="modal-rules">Reglas de Juego</button>
+                <button data-open-modal="modal-about">Licencia MIT y Deslinde Legal</button>
+                <a href="https://github.com/GrAlmazan/historia-cubos" target="_blank" rel="noopener noreferrer" id="footer-github-link">Repositorio GitHub</a>
+            </div>
+            <div class="disclaimer-box">
+                <strong>Aviso Legal:</strong> Proyecto de código abierto independiente bajo Licencia MIT. Inspirado en mecánicas de dados narrativos. No asociado ni afiliado con marcas comerciales de terceros.
+            </div>
+            <p>&copy; 2026 Historia Cubos Project. Creado para inspirar la narración y el juego creativo.</p>
+        </div>
+    </footer>
+
+    <!-- Lógica de la Aplicación (Módulos ES6) -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
